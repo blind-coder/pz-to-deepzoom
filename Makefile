@@ -1,5 +1,14 @@
 THREADS := 2
 
+tmp/stitch.ok: tmp/Makefile.stitch
+	make -f tmp/Makefile.stitch -ik -j $(THREADS) all
+	./filltransparent.sh
+	touch tmp/stitch.ok
+
+tmp/Makefile.stitch: tmp/vectorcache.txt
+	./stitch.sh mapmap_output/*
+	mv Makefile.stitch tmp/Makefile.stitch
+
 tmp/vectorcache.txt: mapmap_output
 	./addtocache.sh mapmap_output/*
 	mv tmp/vectorcache.tmp tmp/vectorcache.txt
@@ -14,12 +23,9 @@ mapmap_output: map texturepacks/ApCom_old.pack texturepacks/ApCom.pack texturepa
 		-gfxsource texturepacks/ApComUI.pack \
 		-gfxsource texturepacks/Erosion.pack \
 		-gfxsource texturepacks/IconsMoveables.pack \
-		-gfxsource texturepacks/JumboTrees1x.pack \
 		-gfxsource texturepacks/JumboTrees2x.pack \
 		-gfxsource texturepacks/Mechanics.pack \
 		-gfxsource texturepacks/RadioIcons.pack \
-		-gfxsource texturepacks/Tiles1x.floor.pack \
-		-gfxsource texturepacks/Tiles1x.pack \
 		-gfxsource texturepacks/Tiles2x.floor.pack \
 		-gfxsource texturepacks/Tiles2x.pack \
 		-gfxsource texturepacks/UI2.pack \
