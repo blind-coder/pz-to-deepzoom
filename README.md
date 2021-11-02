@@ -28,3 +28,5 @@ Mono bug
 There is a bug in Mono that prevents transparency from being correctly drawn resulting in weird look of the map. See https://github.com/blind-coder/pz-mapmap/tree/master/MonoTransparanceBug for details. I suggest to run MapMap.exe on Windows instead of Linux because of that.
 
 I did report that bug to the Mono project way back when, but they told me they wouldn't even file a ticket for it unless I also provided them with a fix for it. I do not know enough about Mono and image manipulation to do that, so Mono will continue to be broken unless someone else picks this up.
+
+**UPDATE**: This may be fixed by now, needs investigating.
