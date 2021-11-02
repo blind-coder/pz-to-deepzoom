@@ -1,5 +1,9 @@
 THREADS := 2
 
+tmp/vectorcache.txt: mapmap_output
+	./addtocache.sh mapmap_output/*
+	mv tmp/vectorcache.tmp tmp/vectorcache.txt
+
 mapmap_output: map texturepacks/ApCom_old.pack texturepacks/ApCom.pack texturepacks/ApComUI.pack texturepacks/Erosion.pack texturepacks/IconsMoveables.pack texturepacks/JumboTrees1x.pack texturepacks/JumboTrees2x.pack texturepacks/Mechanics.pack texturepacks/RadioIcons.pack texturepacks/Tiles1x.floor.pack texturepacks/Tiles1x.pack texturepacks/Tiles2x.floor.pack texturepacks/Tiles2x.pack texturepacks/UI2.pack texturepacks/UI.pack texturepacks/WeatherFx.pack 
 	@echo "Warning! Running this command with the Mono project causes issues with transparency. Unfortunately, Mono refused to fix it when I reported it way back when. See https://github.com/blind-coder/pz-mapmap/tree/master/MonoTransparanceBug for an example of this issue."
 	@echo "Please press enter to continue anyway."
