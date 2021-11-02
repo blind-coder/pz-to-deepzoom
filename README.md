@@ -17,7 +17,7 @@ Run `make` and wait. And wait. And wait. And then wait some more. Wait again. Un
 By default the ground floor (layer 0) will be converted. If you want another layer, delete some files and run `make` with the LAYER parameter:
 
 ```
-rm -rf map.xml map_files tmp/Makefile.stitch tmp/stitch.ok tmp/Makefile.deepzoom work-*.png
+rm -rf map.xml map_files tmp/output-*png tmp/Makefile.stitch tmp/stitch.ok tmp/Makefile.deepzoom work-*.png
 make LAYER=1
 ```
 
