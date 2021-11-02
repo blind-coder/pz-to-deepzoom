@@ -1,5 +1,12 @@
 THREADS := 2
 
+all: tmp/Makefile.deepzoom
+	make -f tmp/Makefile.deepzoom -j $(THREADS) all
+
+tmp/Makefile.deepzoom: tmp/stitch.ok
+	bash ./deepzoom.sh -a 1024 -o png -p tmp/output -s png
+	sed -e 's,output,tmp/output,g' -i tmp/Makefile.deepzoom
+
 tmp/stitch.ok: tmp/Makefile.stitch
 	make -f tmp/Makefile.stitch -ik -j $(THREADS) all
 	./filltransparent.sh
@@ -10,6 +17,7 @@ tmp/Makefile.stitch: tmp/vectorcache.txt
 	mv Makefile.stitch tmp/Makefile.stitch
 
 tmp/vectorcache.txt: mapmap_output
+	mkdir tmp
 	./addtocache.sh mapmap_output/*
 	mv tmp/vectorcache.tmp tmp/vectorcache.txt
 
@@ -17,6 +25,7 @@ mapmap_output: map texturepacks/ApCom_old.pack texturepacks/ApCom.pack texturepa
 	@echo "Warning! Running this command with the Mono project causes issues with transparency. Unfortunately, Mono refused to fix it when I reported it way back when. See https://github.com/blind-coder/pz-mapmap/tree/master/MonoTransparanceBug for an example of this issue."
 	@echo "Please press enter to continue anyway."
 	@read x
+	@mkdir mapmap_output/
 	./MapMap.exe \
 		-gfxsource texturepacks/ApCom_old.pack \
 		-gfxsource texturepacks/ApCom.pack \
@@ -32,7 +41,7 @@ mapmap_output: map texturepacks/ApCom_old.pack texturepacks/ApCom.pack texturepa
 		-gfxsource texturepacks/UI.pack \
 		-gfxsource texturepacks/WeatherFx.pack \
 		-mapsource "map/" \
-		-output "mapmap_output" \
+		-output "mapmap_output/" \
 		-dolayers true \
 		-divider 4 \
 		-threads $(THREADS)
