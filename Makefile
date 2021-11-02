@@ -1,4 +1,5 @@
-THREADS := 2
+THREADS := 1
+LAYER := 0
 
 all: tmp/Makefile.deepzoom
 	make -f tmp/Makefile.deepzoom -j $(THREADS) all
@@ -13,7 +14,7 @@ tmp/stitch.ok: tmp/Makefile.stitch
 	touch tmp/stitch.ok
 
 tmp/Makefile.stitch: tmp/vectorcache.txt
-	./stitch.sh mapmap_output/*
+	./stitch.sh mapmap_output/cell_*_$(LAYER).png
 	mv Makefile.stitch tmp/Makefile.stitch
 
 tmp/vectorcache.txt: mapmap_output

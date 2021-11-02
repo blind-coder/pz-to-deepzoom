@@ -9,7 +9,18 @@ Grab the map you want to convert and put it into a directory called "map/".
 
 Copy the whole directory from Project Zomboid directory at %SteamApps%/projectzomboid/media/texturepacks/ into the checked out repository.
 
+Converting
+==========
+
 Run `make` and wait. And wait. And wait. And then wait some more. Wait again. Until it's done. Also, wait a lot. The main Muldraugh map may take a week or two.
+
+By default the ground floor (layer 0) will be converted. If you want another layer, delete some files and run `make` with the LAYER parameter:
+
+```
+rm -rf map.xml map_files tmp/Makefile.stitch tmp/stitch.ok tmp/Makefile.deepzoom work-*.png
+make LAYER=1
+```
+
 
 Mono bug
 ========
