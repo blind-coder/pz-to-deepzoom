@@ -236,7 +236,8 @@ for level in $( seq ${startLevel} -1 0 ) ; do
 		echo -n "map_files/${level}/crop-${x}-${y}.done " >> tmp/Makefile.deepzoom
 		echo "map_files/${level}/crop-${x}-${y}.done:" >> "${tmpdir}/Makefile.deepzoom.append"
 		echo -en "\tbash -xc '" >> "${tmpdir}/Makefile.deepzoom.append"
-		echo -en "read w h < <( identify -format \"%w %h\" \"${pic#${tmpdir}/}\" );" >> "${tmpdir}/Makefile.deepzoom.append"
+		#echo -en "read w h < <( identify -format \"%w %h\" \"${pic#${tmpdir}/}\" );" >> "${tmpdir}/Makefile.deepzoom.append"
+		echo -en "read w h < <( identify -format \"%w %h\" \"${src}-0-0.${SUFFIX}\" );" >> "${tmpdir}/Makefile.deepzoom.append"
 		echo -en "w=\$\$((\$\${w}/${TILESIZE})); " >> "${tmpdir}/Makefile.deepzoom.append"
 		echo -en "h=\$\$((\$\${h}/${TILESIZE})); " >> "${tmpdir}/Makefile.deepzoom.append"
 		echo -en "convert '${pic#${tmpdir}/}' -transparent black -crop " >> "${tmpdir}/Makefile.deepzoom.append"
