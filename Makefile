@@ -4,6 +4,9 @@ LAYER := 0
 all: tmp/Makefile.deepzoom
 	make -f tmp/Makefile.deepzoom -j $(THREADS) all
 
+clean:
+	rm -f tmp/Makefile.* tmp/output-* tmp/stitch.ok work-*
+
 tmp/Makefile.deepzoom: tmp/stitch.ok
 	bash ./deepzoom.sh -a 1024 -o png -p tmp/output -s png
 	sed -e 's,output,tmp/output,g' -i tmp/Makefile.deepzoom
