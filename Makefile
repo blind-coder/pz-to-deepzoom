@@ -15,6 +15,7 @@ tmp/stitch.ok: tmp/Makefile.stitch
 	make -f tmp/Makefile.stitch -ik -j $(THREADS) all
 	./filltransparent.sh
 	./remembermax.sh $(LAYER)
+	./filltransparent.sh
 	touch tmp/stitch.ok
 
 tmp/Makefile.stitch: tmp/vectorcache.txt
