@@ -12,7 +12,7 @@ if [ "${LAYER}" == "0" ] ; then
 		[ ${x} -gt ${maxx} ] && maxx=${x}
 		[ ${y} -gt ${maxy} ] && maxy=${y}
 	done
-	cp -v "tmp/output-${maxx}-${maxy}.png" "tmp/max-${x}-${y}.png"
+	cp -v "tmp/output-${maxx}-${maxy}.png" "tmp/max-${maxx}-${maxy}.png"
 else
 	for img in tmp/max-*; do
 		cp -v "${img}" "tmp/output-${img#tmp/max-}"
