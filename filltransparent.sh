@@ -16,10 +16,12 @@ for img in tmp/output-*; do
 	[ $y -gt ${maxy} ] && maxy=${y}
 done
 
+[ -e tmp/transparent.png ] || convert xc:transparent -resize 12288x12288 tmp/transparent.png
+
 for x in $(seq 0 ${sizex} ${maxx}) ; do
 	for y in $(seq 0 ${sizey} ${maxy}) ; do
 		if [ ! -e "tmp/output-${x}-${y}.png" ]; then
-			convert xc:transparent -resize 12288x12288 tmp/output-${x}-${y}.png
+			ln -s transparent.png tmp/output-${x}-${y}.png
 		fi
 	done
 done
