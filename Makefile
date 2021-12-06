@@ -12,10 +12,8 @@ tmp/Makefile.deepzoom: tmp/stitch.ok
 	sed -e 's,output,tmp/output,g' -i tmp/Makefile.deepzoom
 
 tmp/stitch.ok: tmp/Makefile.stitch
-	make -f tmp/Makefile.stitch -ik -j $(THREADS) all
-	./filltransparent.sh
+	make -f tmp/Makefile.stitch -k -j $(THREADS) all
 	./remembermax.sh $(LAYER)
-	./filltransparent.sh
 	touch tmp/stitch.ok
 
 tmp/Makefile.stitch: tmp/vectorcache.txt
