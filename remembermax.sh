@@ -12,6 +12,13 @@ if [ "${LAYER}" == "0" ] ; then
 		[ ${x} -gt ${maxx} ] && maxx=${x}
 		[ ${y} -gt ${maxy} ] && maxy=${y}
 	done
+	[ -e tmp/transparent.png ] || convert xc:transparent -resize 12288x12288 tmp/transparent.png
+	if [ ! -e "tmp/output-0-0.png" ] ; then
+		cp tmp/transparent.png "tmp/output-0-0.png"
+	fi
+	if [ ! -e "tmp/output-${maxx}-${maxy}.png" ] ; then
+		cp tmp/transparent.png "tmp/output-${maxx}-${maxy}.png"
+	fi
 	cp -v "tmp/output-${maxx}-${maxy}.png" "tmp/max-${maxx}-${maxy}.png"
 else
 	for img in tmp/max-*; do
