@@ -6,7 +6,8 @@ tileboundary=12288
 FORMAT="png"
 cmds=""
 
-tmp="tmp/"
+tmp="$(mktemp -d)"
+trap "rm -rf ${tmp}" EXIT
 
 export RUNTHREADS=1
 
