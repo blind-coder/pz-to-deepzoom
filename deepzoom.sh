@@ -170,7 +170,8 @@ for level in $( seq ${startLevel} -1 0 ) ; do
 				#output="montage-${x}-${y}.${SUFFIX}"
 				output="work-${x}-${y}.${SUFFIX}"
 
-				echo -en "\tbash -c 'read tlw tlh < <( identify -format \"%w %h\" ${tl} ); convert xc:transparent -background transparent -page +0+0 ${tl} " >> "${tmpdir}/Makefile.deepzoom.append"
+				echo -en "\tbash -ec '[ -f ${tl} -o -f ${tr} -o -f ${bl} -o -f ${br} ] || exit 0; read tlw tlh < <( identify -format \"%w %h\" \"work-0-0.${SUFFIX}\" ); convert xc:transparent -background transparent " >> "${tmpdir}/Makefile.deepzoom.append"
+				echo -n "\` [ -f '${tl}' ] && echo -n \" -page +0+0 ${tl} \" \` " >> "${tmpdir}/Makefile.deepzoom.append"
 				echo -n "\` [ -f '${tr}' ] && echo -n \" -page +\$\${tlw}+0 ${tr} \" \` " >> "${tmpdir}/Makefile.deepzoom.append"
 				echo -n "\` [ -f '${bl}' ] && echo -n \" -page +0+\$\${tlh} ${bl} \" \` " >> "${tmpdir}/Makefile.deepzoom.append"
 				echo -n "\` [ -f '${br}' ] && echo -n \" -page +\$\${tlw}+\$\${tlh} ${br} \" \` " >> "${tmpdir}/Makefile.deepzoom.append"
@@ -234,10 +235,9 @@ for level in $( seq ${startLevel} -1 0 ) ; do
 		y=$(((${y}/${MONTAGESTEP})/${INPUTTILESIZE}))
 
 		echo -n "map_files/${level}/crop-${x}-${y}.done " >> tmp/Makefile.deepzoom
-		echo "map_files/${level}/crop-${x}-${y}.done:" >> "${tmpdir}/Makefile.deepzoom.append"
-		echo -en "\tbash -xc '" >> "${tmpdir}/Makefile.deepzoom.append"
-		#echo -en "read w h < <( identify -format \"%w %h\" \"${pic#${tmpdir}/}\" );" >> "${tmpdir}/Makefile.deepzoom.append"
-		echo -en "read w h < <( identify -format \"%w %h\" \"${src}-0-0.${SUFFIX}\" );" >> "${tmpdir}/Makefile.deepzoom.append"
+		echo "map_files/${level}/crop-${x}-${y}.done: ${pic#${tmpdir}/}" >> "${tmpdir}/Makefile.deepzoom.append"
+		echo -en "\tbash -xec '" >> "${tmpdir}/Makefile.deepzoom.append"
+		echo -en "read w h <<< \"\$\$(identify -format \"%w %h\" \"${src}-0-0.${SUFFIX}\" )\"; " >> "${tmpdir}/Makefile.deepzoom.append"
 		echo -en "w=\$\$((\$\${w}/${TILESIZE})); " >> "${tmpdir}/Makefile.deepzoom.append"
 		echo -en "h=\$\$((\$\${h}/${TILESIZE})); " >> "${tmpdir}/Makefile.deepzoom.append"
 		echo -en "convert '${pic#${tmpdir}/}' -transparent black -crop " >> "${tmpdir}/Makefile.deepzoom.append"
