@@ -8,6 +8,10 @@ tmp="$(mktemp -d)"
 mkdir -p ${tmp}/map_files/21
 trap "rm -rf ${tmp}" EXIT
 
+# Create a proper border or we'll run into nasty edge cases
+[ -e tmp/transparent-1024.png ] || convert -size 1024x1024 xc:transparent tmp/transparent-1024.png
+[ -e tmp/transparent-1024.jpg ] || convert -size 1024x1024 xc:transparent tmp/transparent-1024.jpg
+
 while read file; do 
 	touch "${tmp}/map_files/21/${file}"
 	file=${file%.*}
@@ -15,6 +19,16 @@ while read file; do
 	[ ${x} -gt ${maxx} ] && maxx=${x}
 	[ ${y} -gt ${maxy} ] && maxy=${y}
 done < <( ls -1U map_files/21/ | grep 'jpg$')
+
+#while read x ; do
+	#f="map_files/21/${x}_${maxy}.jpg"
+	#[ -e "${f}"] || cp tmp/transparent-1024.jpg "${f}"
+#done < <( seq 0 2 ${maxx} )
+#
+#while read y ; do
+	#f="map_files/21/${maxx}_${y}.jpg"
+	#[ -e "${f}"] || cp tmp/transparent-1024.jpg "${f}"
+#done < <( seq 0 2 ${maxy} )
 
 cd ${tmp}
 for lvl in $(seq 20 -1 0); do
@@ -42,21 +56,60 @@ for lvl in $(seq 20 -1 0); do
 			echo " -layers merge +repage -resize 50% jpg:${n}"
 			if [ ${x} -ne ${maxx} -o ${y} -ne ${maxy} ]; then
 
-if false; then
-	read dimx dimy < <( identify -format "%w %h" "map_files/15/10_9.jpg" )
-	ndimx=${dimx}
-	ndimy=${dimy}
-	[ 20 -ne 48 ] && ndimx=1024
-	[ 18 -ne 31 ] && ndimy=1024
-	if [ ${ndimx} -ne ${dimx} -o ${ndimy} -ne ${dimy} ]; then
-		convert -size ${ndimx}x${ndimy} xc:transparent -page +0+0 map_files/15/10_9.jpg -background transparent -flatten -background transparent -layers merge -flatten jpg:map_files/15/10_9.jpg
-	fi
-fi
-				echo -en "\tbash -c 'read dimx dimy < <( identify -format \"%w %h\" \"${n}\" ); "
-				echo -en "ndimx=\$\${dimx}; "
-				echo -en "ndimy=\$\${dimy}; "
-				echo -en "[ $((${x}+1)) -lt ${maxx} ] && ndimx=1024; "
-				echo -en "[ $((${y}+1)) -lt ${maxy} ] && ndimy=1024; "
+#if false; then
+	#read dimx dimy < <( identify -format "%w %h" "map_files/15/10_9.jpg" )
+	#ndimx=${dimx}
+	#ndimy=${dimy}
+	#if [ 20 -ne 48 ]; then
+		#ndimx=1024
+	#else
+		#read xfile < <( ls -1U map_files/16/11_*.jpg | head -n 1 )
+		#read ndimx < <( identify -format "%w" "${xfile}" )
+		#ndimx=$((ndimx+512))
+	#fi
+	#if [ 18 -ne 31 ]; then
+		#ndimy=1024
+	#else
+		#read yfile < <( ls -1U map_files/16/*_10.jpg | head -n 1 )
+		#read ndimy < <( identify -format "%h" "${yfile}" )
+		#ndimy=$((ndimy+512))
+	#fi
+	#if [ ${ndimx} -ne ${dimx} -o ${ndimy} -ne ${dimy} ]; then
+		#convert -size ${ndimx}x${ndimy} xc:transparent -page +0+0 map_files/15/10_9.jpg -background transparent -flatten -background transparent -layers merge -flatten jpg:map_files/15/10_9.jpg
+	#fi
+#fi
+				echo -en "\tbash -c '"
+				echo -en "read dimx dimy < <( identify -format \"%w %h\" \"${n}\" ); "
+				if [ $((${x}+1)) -lt ${maxx} ]; then
+					echo -en "ndimx=1024; "
+				else
+					if ! [ -e ${tr} -o -e ${br} ]; then
+						xfile="$(ls -1U map_files/$((lvl+1))/$((x+1))_*.jpg | head -n 1)"
+						if [ -n "${xfile}" ]; then
+							echo -en "read ndimx < <( identify -format \"%w\" \"${xfile}\" ); "
+							echo -en "ndimx=\$\$(( (ndimx+1024) / 2) ); "
+						else
+							echo -en "ndimx=\$\${dimx}; "
+						fi
+					else
+						echo -en "ndimx=\$\${dimx}; "
+					fi
+				fi
+				if [ $((${y}+1)) -lt ${maxy} ]; then
+					echo -en "ndimy=1024; "
+				else
+					if ! [ -e ${bl} -o -e ${br} ]; then
+						yfile="$(ls -1U map_files/$((lvl+1))/*_$((y+1)).jpg | head -n 1)"
+						if [ -n "${yfile}" ]; then
+							echo -en "read ndimy < <( identify -format \"%h\" \"${yfile}\" ); "
+							echo -en "ndimy=\$\$(( (ndimy+1024) / 2) ); "
+						else
+							echo -en "ndimy=\$\${dimy}; "
+						fi
+					else
+						echo -en "ndimy=\$\${dimy}; "
+					fi
+				fi
 				echo -en "if [ \$\${ndimx} -ne \$\${dimx} -o \$\${ndimy} -ne \$\${dimy} ]; then ";
 					echo -en "convert -size \$\${ndimx}x\$\${ndimy} xc:transparent -page +0+0 ${n} -background transparent -flatten -background transparent -layers merge -flatten jpg:${n}; "
 				echo -en "fi;' "
